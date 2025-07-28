@@ -1,0 +1,22 @@
+<div class="characters-container">
+    <div class="characters-header">
+        <h1 class="characters-title">
+            <span class="characters-icon">🎮</span>
+            Personajes Pokémon
+        </h1>
+    </div>
+    
+    @if (characters.isLoading()) {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Cargando personajes...</p>
+        </div>
+    } @else if (characters.error()) {
+        <div class="error-container">
+            <div class="error-icon">❌</div>
+            <p class="error-text">Error al cargar los personajes</p>
+        </div>
+    } @else {
+        <app-character-datail [characters]="characters.data()?.results || []"></app-character-datail>
+    }
+</div>

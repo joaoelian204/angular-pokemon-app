@@ -1,0 +1,80 @@
+<div class="pokemon-container">
+    <!-- Header con buscador centrado -->
+    <div class="pokemon-header">
+        <div class="pokemon-search">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input 
+                    type="text" 
+                    placeholder="Buscar Pokémon..." 
+                    class="search-input"
+                    (input)="onSearch($event)"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de Pokémon -->
+    <div class="pokemon-grid">
+        @for (item of filteredCharacters(); track item.name) {
+            <div class="pokemon-card" (mouseenter)="prefetchData(item)">
+                <div class="pokemon-card-header">
+                    <h3 class="pokemon-name">{{item.name | titlecase}}</h3>
+                    <div class="pokemon-number">#{{getPokemonId(item)}}</div>
+                </div>
+                
+                <div class="pokemon-card-body">
+                    <div class="pokemon-image-container">
+                        <img 
+                            [src]="getPokemonImage(item)" 
+                            [alt]="'Imagen de ' + item.name"
+                            title="Pokémon {{item.name}}"
+                            class="pokemon-image"
+                            (error)="$event.target.style.display='none'"
+                            (load)="$event.target.style.display='block'"
+                        />
+                        @if (false) {
+                            <div class="pokemon-image-fallback">
+                                <span class="pokemon-icon"></span>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div class="pokemon-info">
+                        <div class="pokemon-id">ID: {{getPokemonId(item)}}</div>
+                        <div class="pokemon-type">Tipo: Normal</div>
+                    </div>
+                </div>
+                
+                <div class="pokemon-card-footer">
+                    <div class="pokemon-actions">
+                        <button class="pokemon-btn-favorite" (click)="toggleFavorite(item)">
+                            <span class="btn-icon">{{isFavorite(item) ? '❤️' : '🤍'}}</span>
+                        </button>
+                        <a [routerLink]="['/character', item.name]" class="pokemon-btn">
+                            <span class="btn-icon">👁️</span>
+                            Ver detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    @if (filteredCharacters().length === 0 && characters().length > 0) {
+        <div class="no-results">
+            <div class="no-results-icon">🔍</div>
+            <h3>No se encontraron Pokémon</h3>
+            <p>Intenta con otro término de búsqueda</p>
+        </div>
+    }
+
+    <!-- Loading state -->
+    @if (characters().length === 0) {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Cargando Pokémon...</p>
+        </div>
+    }
+</div>
